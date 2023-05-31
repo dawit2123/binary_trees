@@ -1,50 +1,21 @@
 #include "binary_trees.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /**
- * binary_tree_is_leaf - checks if a node is a leaf
+ * binary_tree_is_full - checks if binary tree is full
+ * @tree: pointer to the root node of the tree to check
  *
- * @node: pointer to the node
- * Return: 1 if node is a leaf, otherwise 0
- */
-int binary_tree_is_leaf(const binary_tree_t *node)
-{
-	int leaf = 0;
-
-	if (node && !(node->left) && !(node->right))
-		leaf = 1;
-
-	return (leaf);
-}
-
-/**
- * binary_tree_is_full - checks if a binary tree is full
- *
- * @tree: tree
- * Return: 1 if tree is full, 0 otherwise
+ * Return: 0 if tree is NULL
  */
 int binary_tree_is_full(const binary_tree_t *tree)
 {
-	if (binary_tree_is_leaf(tree))
+	if (!tree)
+		return (0);
+	if (!tree->left && !tree->right)
 		return (1);
-
-	if (binary_tree_is_parent_full(tree))
-		return (binary_tree_is_full(tree->left) && binary_tree_is_full(tree->right));
-
+	if (tree->left && tree->right)
+		return (binary_tree_is_full(tree->left) &&
+		binary_tree_is_full(tree->right));
 	return (0);
-}
-
-/**
- * binary_tree_is_parent_full - checks if a node is a parent
- *
- * @node: pointer to the node
- * Return: 1 if node is a parent, otherwise 0
- */
-int binary_tree_is_parent_full(const binary_tree_t *node)
-{
-	int parent = 0;
-
-	if (node && node->left && node->right)
-		parent = 1;
-
-	return (parent);
 }

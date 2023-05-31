@@ -1,80 +1,86 @@
 #include "binary_trees.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /**
- * binary_tree_is_leaf - checks if a node is a leaf
+ * _binary_tree_size - size of tree
+ * @tree: pointer to the root node
  *
- * @node: pointer to the node to check
- * Return: 1 if node is a leaf, otherwise 0
+ * Return: size of tree or NULL if tree empty
  */
-int binary_tree_is_leaf(const binary_tree_t *node)
+size_t _binary_tree_size(const binary_tree_t *tree)
 {
-	int leaf = 0;
 
-	if (node && !(node->left) && !(node->right))
-		leaf = 1;
+	size_t l_size = 0, r_size = 0;
 
-	return (leaf);
+	if (!tree)
+		return (0);
+
+	l_size = tree->left ? _binary_tree_size(tree->left) : 0;
+	r_size = tree->right ? _binary_tree_size(tree->right) : 0;
+	return (l_size + r_size + 1);
 }
 
 /**
- * binary_tree_is_parent_full - checks if a node is a parent
+ * _binary_tree_height - height of tree
+ * @tree: pointer to the root node
  *
- * @node: pointer to the node to check
- * Return: 1 if node is a parent, otherwise 0
+ * Return: height of tree or NULL if tree empty
  */
-int binary_tree_is_parent_full(const binary_tree_t *node)
+size_t _binary_tree_height(const binary_tree_t *tree)
 {
-	int parent = 0;
+	size_t l_Height = 0, r_Height = 0;
 
-	if (node && node->left && node->right)
-		parent = 1;
+	if (!tree)
+		return (0);
 
-	return (parent);
+	l_Height = tree->left ? 1 + _binary_tree_height(tree->left) : 0;
+	r_Height = tree->right ? 1 + _binary_tree_height(tree->right) : 0;
+
+	if (l_Height >= r_Height)
+		return (l_Height);
+	else
+		return (r_Height);
 }
 
 /**
- * height - measures the height of a tree
+ * power - exponent of a num
+ * @base: base of num
+ * @exp: exp of num
  *
- * @tree: tree root
- * Return: height
+ * Return: size of tree or NULL if tree empty
  */
-int height(const binary_tree_t *tree)
+int power(int base, int exp)
 {
-	int left = 0;
-	int right = 0;
+	int power = 1, i = 1;
 
-	if (tree == NULL)
-		return (-1);
-
-	left = height(tree->left);
-	right = height(tree->right);
-
-	if (left > right)
-		return (left + 1);
-
-	return (right + 1);
+	for (i = 1; i <= exp; i++)
+	{
+		power *= base;
+	}
+	return (power);
 }
 
 /**
- * binary_tree_is_perfect - checks if a binary tree is perfect
+ * binary_tree_is_perfect - checks if a tree is perfect
+ * @tree: pointer to the root node of tree
  *
- * @tree: tree
- * Return: 1 if tree is perfect, 0 otherwise
+ * Return: 0 if tree is NULL or imperfect & 1 if perfect
  */
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-	if (tree && height(tree->left) == height(tree->right))
+	int size = 0, height = 0, nodes = 0;
+
+	if (tree)
 	{
-		if (height(tree->left) == -1)
-			return (1);
+		height = _binary_tree_height(tree) + 1;
+		size = _binary_tree_size(tree);
+		nodes = power(2, height);
 
-		if (binary_tree_is_leaf(tree->left) && binary_tree_is_leaf(tree->right))
+		if (size == (nodes - 1))
 			return (1);
-
-		if (binary_tree_is_parent_full(tree))
-			return (binary_tree_is_perfect(tree->left) &&
-				binary_tree_is_perfect(tree->right));
+		else
+			return (0);
 	}
-
 	return (0);
 }
